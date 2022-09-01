@@ -16,4 +16,5 @@ res.render('show.ejs', { data: Pokemon[req.params.id] });
 
 app.listen(port, () => {
     console.log(`listening on port`,port)
-})
+}) 
+
