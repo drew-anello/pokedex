@@ -1,20 +1,34 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-const Pokemon = require('./models/pokemon.js');
-const port = 3000
+const methodOverride = require("method-override");
+const pokemon = require("./models/pokemon");
 
-// INDEX
-app.get('/', (req, res) => {
-res.render('index.ejs', { data: Pokemon });
+app.use(express.urlencoded({ extended: false }));
+app.use(methodOverride("_method"));
+
+app.get("/pokemon", (req, res) => {
+    res.render("index_views.ejs", {
+        pokemons: pokemon,
+    });
 });
 
-
-// SHOW
-app.get('/:id', (req, res) => {
-res.render('show.ejs', { data: Pokemon[req.params.id] });
+app.get("/pokemon/new", (req, res) => {
+    res.render("new.ejs")
 });
 
-app.listen(port, () => {
-    console.log(`listening on port`,port)
-}) 
+app.delete("/pokemon/:id", (req, res) => {
+    pokemon.splice(req.params.id, 1)
+    res.redirect("/pokemon");
+})
+app.post("/pokemon", (req, res) => {
+    pokemon.push(req.body);
+    res.redirect("/pokemon");
+});
 
+app.get("/pokemon/:id", (req, res) => {
+    res.render("show_views.ejs", {
+        pokemon: pokemon[req.params.id],
+    });
+});
+
+app.listen(3000);
